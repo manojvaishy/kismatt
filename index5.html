@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kismat Games</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --purple: #8a2387;
+            --pink: #e94057;
+            --orange: #f27121;
+            --light-gray-1: #f8f9fa;
+            --light-gray-2: #f0f4f8;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--purple), var(--pink), var(--orange));
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-section {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header {
+            background: linear-gradient(to right, var(--purple), var(--pink));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .intro-text {
+            font-size: 18px;
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .btn {
+            background: linear-gradient(to right, var(--purple), var(--pink));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(138, 35, 135, 0.25);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 35, 135, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: white;
+            color: var(--pink);
+            border: 2px solid var(--pink);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.2s;
+        }
+
+        .option-btn:hover {
+            background: linear-gradient(to right, var(--purple), var(--pink));
+            color: white;
+            border-color: var(--pink);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            background: linear-gradient(to right, var(--purple), var(--pink));
+            color: white;
+            border-color: var(--pink);
+            transform: scale(1.05);
+        }
+
+        .reasoning-box {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .reasoning-box h4 {
+            font-size: 16px;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .reasoning-input {
+            width: 100%;
+            height: 100px;
+            border: 2px solid var(--light-gray-2);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        .reasoning-input:focus {
+            outline: none;
+            border-color: var(--pink);
+        }
+        
+        .send-btn {
+            background: linear-gradient(to right, var(--purple), var(--pink));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
+            opacity: 0.5;
+            pointer-events: none;
+            margin-top: 15px;
+        }
+        
+        .send-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .chat-log {
+            padding: 20px;
+            background: var(--light-gray-1);
+            border-radius: 15px;
+            margin-top: 20px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chat-message.self {
+            background: linear-gradient(to right, var(--purple), var(--pink));
+            color: white;
+        }
+
+        .chat-question {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .chat-choice {
+            font-style: italic;
+            font-weight: 500;
+            color: var(--light-gray-1);
+        }
+        
+        .chat-reason {
+            margin-top: 5px;
+        }
+        
+        .end-game-card {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Kismat Games</div>
+        </div>
+        
+        <div class="game-section">
+            <!-- Main Game Menu -->
+            <div id="game-menu" class="card active">
+                <h2 style="font-size: 24px; color: var(--text-dark); margin-bottom: 15px;">Choose a Game</h2>
+                <div class="intro-text">
+                    Select a game to play with your date and get to know each other better!
+                </div>
+                <button class="btn" id="would-you-rather-btn">Play Would You Rather?</button>
+            </div>
+            
+            <!-- Would You Rather Game Section -->
+            <div id="wyr-game" style="display: none;">
+                <!-- Intro Card -->
+                <div id="wyr-intro" class="card active">
+                    <h2 style="font-size: 24px; color: var(--text-dark); margin-bottom: 15px;">Welcome to Would You Rather?</h2>
+                    <p class="intro-text">Get ready for some tricky choices that reveal your personality. Choose wisely, explain your answers, and share them with your date!</p>
+                    <button class="btn" id="start-game-btn">Start Game</button>
+                </div>
+                
+                <!-- Questions Container -->
+                <div id="question-container"></div>
+                
+                <!-- Chat Log -->
+                <div class="chat-log" id="chat-log" style="display: none;">
+                    <h4 style="color: var(--text-light); font-size: 14px; text-align: center; margin-bottom: 10px;">Chat Log</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameMenu = document.getElementById('game-menu');
+            const wyrGame = document.getElementById('wyr-game');
+            const wyrIntroCard = document.getElementById('wyr-intro');
+            const startBtn = document.getElementById('start-game-btn');
+            const wyrBtn = document.getElementById('would-you-rather-btn');
+            const questionContainer = document.getElementById('question-container');
+            const chatLog = document.getElementById('chat-log');
+            
+            let currentQuestionIndex = 0;
+            let selectedOptionText = "";
+            let selectedQuestionText = "";
+            let questionElement = null;
+
+            const questions = [
+                {
+                    q: "Would you rather explore space or the deepest parts of the ocean?",
+                    options: ["Explore space", "Explore the deepest parts of the ocean"]
+                },
+                {
+                    q: "Would you rather always be 10 minutes late or always be 20 minutes early?",
+                    options: ["Always be 10 minutes late", "Always be 20 minutes early"]
+                },
+                {
+                    q: "Would you rather never use social media again or never watch movies again?",
+                    options: ["Never use social media again", "Never watch movies again"]
+                },
+                {
+                    q: "Would you rather have a magical pet unicorn or a flying carpet?",
+                    options: ["A magical pet unicorn", "A flying carpet"]
+                },
+                {
+                    q: "Would you rather be able to talk to animals or speak all human languages fluently?",
+                    options: ["Talk to animals", "Speak all human languages fluently"]
+                },
+                {
+                    q: "Would you rather find true love or find a briefcase filled with $10 million?",
+                    options: ["Find true love", "Find a briefcase filled with $10 million"]
+                },
+                {
+                    q: "Would you rather be the funniest person in the room or the smartest person in the room?",
+                    options: ["The funniest person", "The smartest person"]
+                },
+                {
+                    q: "Would you rather go on a spontaneous adventure or plan every detail of a trip?",
+                    options: ["Go on a spontaneous adventure", "Plan every detail"]
+                },
+                {
+                    q: "Would you rather live in a city or in a quiet countryside town?",
+                    options: ["A bustling city", "A quiet countryside town"]
+                },
+                {
+                    q: "Would you rather have a terrible short-term memory or a terrible long-term memory?",
+                    options: ["A terrible short-term memory", "A terrible long-term memory"]
+                },
+                {
+                    q: "Would you rather only be able to whisper or only be able to shout?",
+                    options: ["Only be able to whisper", "Only be able to shout"]
+                },
+                {
+                    q: "Would you rather be a famous movie star or a famous scientist?",
+                    options: ["A famous movie star", "A famous scientist"]
+                },
+                {
+                    q: "Would you rather live in a house made of candy or a house made of chocolate?",
+                    options: ["A house made of candy", "A house made of chocolate"]
+                },
+                {
+                    q: "Would you rather have the power to teleport or the power to read minds?",
+                    options: ["Teleport", "Read minds"]
+                },
+                {
+                    q: "Would you rather have a perfect, flawless memory of everything you've ever experienced or be able to forget anything at will?",
+                    options: ["A perfect memory", "The ability to forget at will"]
+                }
+            ];
+
+            // Event listener for the main menu button
+            wyrBtn.addEventListener('click', () => {
+                gameMenu.style.display = 'none';
+                wyrGame.style.display = 'block';
+                wyrIntroCard.classList.add('active');
+            });
+
+            // Event listener to start the game
+            startBtn.addEventListener('click', () => {
+                wyrIntroCard.classList.remove('active');
+                wyrIntroCard.style.display = 'none';
+                chatLog.style.display = 'block';
+                renderQuestion();
+            });
+
+            // Function to handle option selection and show the next question
+            function handleOptionSelection(optionText, questionText) {
+                if (questionElement) {
+                    // Get the reasoning text area and send button for the current question
+                    const reasoningInput = questionElement.querySelector('.reasoning-input');
+                    const sendBtn = questionElement.querySelector('.send-btn');
+                    
+                    // Store the selected option and question text
+                    selectedOptionText = optionText;
+                    selectedQuestionText = questionText;
+
+                    // Update UI to show selection
+                    questionElement.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                        if (btn.textContent === optionText) {
+                            btn.classList.add('selected');
+                        }
+                    });
+
+                    // Activate the send button
+                    sendBtn.classList.add('active');
+                }
+            }
+
+            // Function to send the message to the chat and advance the game
+            function sendToChatAndNext() {
+                const reasoningInput = questionElement.querySelector('.reasoning-input');
+                const reasoning = reasoningInput.value.trim();
+                
+                const chatMessage = document.createElement('div');
+                chatMessage.className = 'chat-message self';
+                chatMessage.innerHTML = `
+                    <div class="chat-question">Q: ${selectedQuestionText}</div>
+                    <div class="chat-choice">You chose: ${selectedOptionText}</div>
+                    ${reasoning ? `<div class="chat-reason">My reason: "${reasoning}"</div>` : ''}
+                `;
+                chatLog.appendChild(chatMessage);
+                chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the bottom
+
+                // Animate and hide the current question, then render the next one
+                questionElement.classList.remove('active');
+                setTimeout(() => {
+                    questionElement.style.display = 'none';
+                    currentQuestionIndex++;
+                    renderQuestion();
+                }, 500);
+            }
+
+            // Function to dynamically render the current question
+            function renderQuestion() {
+                if (currentQuestionIndex >= questions.length) {
+                    // End of the game
+                    const endCard = document.createElement('div');
+                    endCard.className = 'card end-game-card';
+                    endCard.innerHTML = "You've completed all the questions! Great job!";
+                    questionContainer.appendChild(endCard);
+                    setTimeout(() => endCard.classList.add('active'), 50);
+                    return;
+                }
+
+                const currentQuestion = questions[currentQuestionIndex];
+                questionElement = document.createElement('div');
+                questionElement.className = 'card';
+                
+                let optionsHtml = '';
+                currentQuestion.options.forEach(option => {
+                    optionsHtml += `<button class="option-btn">${option}</button>`;
+                });
+
+                questionElement.innerHTML = `
+                    <div class="question-text">${currentQuestion.q}</div>
+                    <div class="options">${optionsHtml}</div>
+                    <div class="reasoning-box">
+                        <h4>Why? (optional)</h4>
+                        <textarea class="reasoning-input" placeholder="Type your reason here..."></textarea>
+                    </div>
+                    <button class="btn send-btn">Send to Chat & Next</button>
+                `;
+                
+                questionContainer.appendChild(questionElement);
+                setTimeout(() => questionElement.classList.add('active'), 50);
+
+                // Add event listeners to the new elements
+                questionElement.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        handleOptionSelection(btn.textContent, currentQuestion.q);
+                    });
+                });
+                
+                const sendBtn = questionElement.querySelector('.send-btn');
+                sendBtn.addEventListener('click', sendToChatAndNext);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kismat | Create Your Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #8a2387, #e94057);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .tagline {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .progress-container {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin: 20px 0 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #f27121;
+            border-radius: 3px;
+            width: 12.5%;
+            transition: width 0.5s ease;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            margin-bottom: 20px;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+        
+        .question-number {
+            color: #8a2387;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            color: #2c3e50;
+        }
+        
+        .answer-input {
+            width: 100%;
+            min-height: 120px;
+            border: 2px solid #f0f4f8;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 16px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #e94057;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #8a2387, #e94057);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            margin: 25px auto 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(138, 35, 135, 0.25);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(138, 35, 135, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .nav-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #f0f4f8;
+            margin: 0 5px;
+            transition: background 0.3s;
+        }
+        
+        .dot.active {
+            background: #8a2387;
+        }
+        
+        .profile-summary {
+            display: none;
+            padding: 20px;
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .profile-tagline {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .summary-title {
+            text-align: center;
+            color: #e94057;
+            margin: 25px 0 15px;
+            font-weight: 600;
+        }
+        
+        .answer-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .answer-question {
+            font-weight: 600;
+            color: #e94057;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .answer-text {
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+        
+        .complete-icon {
+            text-align: center;
+            font-size: 60px;
+            color: #8a2387;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Kismat</div>
+            <div class="tagline">Find your perfect match through deeper connections</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress"></div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="question-card active" id="question-1">
+                <div class="question-number">Question 1 of 8</div>
+                <div class="question-text">If you could relive one day in your life, which would it be and why?</div>
+                <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                <button class="btn" onclick="showNextQuestion(1)">Next Question</button>
+                <div class="nav-dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            
+            <div class="question-card" id="question-2">
+                <div class="question-number">Question 2 of 8</div>
+                <div class="question-text">What's one belief you hold that most people disagree with?</div>
+                <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                <button class="btn" onclick="showNextQuestion(2)">Next Question</button>
+                <div class="nav-dots">
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            
+            <div class="question-card" id="question-3">
+                <div class="question-number">Question 3 of 8</div>
+                <div class="question-text">Describe your dream Sunday morning.</div>
+                <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                <button class="btn" onclick="showNextQuestion(3)">Next Question</button>
+                <div class="nav-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            
+            <div class="question-card" id="question-4">
+                <div class="question-number">Question 4 of 8</div>
+                <div class="question-text">What's a small thing that makes you really happy?</div>
+                <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                <button class="btn" onclick="showNextQuestion(4)">Next Question</button>
+                <div class="nav-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            
+            <div class="question-card" id="question-5">
+                <div class="question-number">Question 5 of 8</div>
+                <div class="question-text">If money wasn't a problem, what would you do every day?</div>
+                <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                <button class="btn" onclick="showNextQuestion(5)">Next Question</button>
+                <div class="nav-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            
+            <div class="question-card" id="question-6">
+                <div class="question-number">Question 6 of 8</div>
+                <div class="question-text">What's one fear you've overcome recently?</div>
+                <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                <button class="btn" onclick="showNextQuestion(6)">Next Question</button>
+                <div class="nav-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            
+            <div class="question-card" id="question-7">
+                <div class="question-number">Question 7 of 8</div>
+                <div class="question-text">What kind of conversations do you enjoy most?</div>
+                <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                <button class="btn" onclick="showNextQuestion(7)">Next Question</button>
+                <div class="nav-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            
+            <div class="question-card" id="question-8">
+                <div class="question-number">Question 8 of 8</div>
+                <div class="question-text">If your life was a movie, what would the title be?</div>
+                <textarea class="answer-input" placeholder="Type your answer here..."></textarea>
+                <button class="btn" onclick="showProfileSummary()">Complete Profile</button>
+                <div class="nav-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                </div>
+            </div>
+            
+            <div class="profile-summary" id="profile-summary">
+                <div class="complete-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="profile-header">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Profile" class="profile-pic">
+                    <h2 class="profile-name">Aisha, 22</h2>
+                    <p class="profile-tagline">"Looking for someone who laughs at my bad puns."</p>
+                </div>
+                
+                <h3 class="summary-title">Your Personality Profile</h3>
+                
+                <div class="answer-card">
+                    <div class="answer-question">If you could relive one day in your life, which would it be and why?</div>
+                    <p class="answer-text">The day I backpacked solo for the first time — it was terrifying but I felt so alive.</p>
+                </div>
+                
+                <div class="answer-card">
+                    <div class="answer-question">What's one belief you hold that most people disagree with?</div>
+                    <p class="answer-text">Pineapple does belong on pizza 🍍🍕</p>
+                </div>
+                
+                <div class="answer-card">
+                    <div class="answer-question">Describe your dream Sunday morning.</div>
+                    <p class="answer-text">Waking up late, cooking pancakes, and binge-watching F.R.I.E.N.D.S.</p>
+                </div>
+                
+                <div class="answer-card">
+                    <div class="answer-question">What's a small thing that makes you really happy?</div>
+                    <p class="answer-text">When my Spotify shuffle magically plays my current favorite song.</p>
+                </div>
+                
+                <div class="answer-card">
+                    <div class="answer-question">If money wasn't a problem, what would you do every day?</div>
+                    <p class="answer-text">Run a café-bookstore where strangers become friends.</p>
+                </div>
+                
+                <div class="answer-card">
+                    <div class="answer-question">What's one fear you've overcome recently?</div>
+                    <p class="answer-text">Public speaking — I gave a talk last month and didn't faint.</p>
+                </div>
+                
+                <div class="answer-card">
+                    <div class="answer-question">What kind of conversations do you enjoy most?</div>
+                    <p class="answer-text">The ones that start silly and end up surprisingly deep.</p>
+                </div>
+                
+                <div class="answer-card">
+                    <div class="answer-question">If your life was a movie, what would the title be?</div>
+                    <p class="answer-text">"Accidentally Organized Chaos." 🎬</p>
+                </div>
+                
+                <button class="btn" onclick="redirectToChat()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showNextQuestion(currentQuestion) {
+            // Hide current question
+            document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+            
+            // Show next question
+            document.getElementById(`question-${currentQuestion + 1}`).style.display = 'block';
+            
+            // Update progress bar
+            const progress = (currentQuestion) / 8 * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+        
+            // Update navigation dots
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(dot => dot.classList.remove('active'));
+            if (dots[currentQuestion]) {
+                dots[currentQuestion].classList.add('active');
+            }
+        }
+        
+        function showProfileSummary() {
+            // Hide all questions
+            for (let i = 1; i <= 8; i++) {
+                document.getElementById(`question-${i}`).style.display = 'none';
+            }
+            
+            // Show profile summary
+            document.getElementById('profile-summary').style.display = 'block';
+            
+            // Update progress bar to complete
+            document.getElementById('progress').style.width = '100%';
+        }
+        
+        function redirectToChat() {
+            // Redirect the user to chat.html
+            window.location.href = 'chat.html';
+        }
+        
+        // Initialize the page with first question visible and others hidden
+        document.addEventListener('DOMContentLoaded', function() {
+            for (let i = 2; i <= 8; i++) {
+                document.getElementById(`question-${i}`).style.display = 'none';
+            }
+            document.getElementById('profile-summary').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

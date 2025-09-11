@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kismat - Riya's Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(to right, #8a2387, #e94057);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .profile-container {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-50px);
+            margin-bottom: -30px;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-photo:hover {
+            transform: translateY(-55px) scale(1.05);
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #8a2387;
+            margin-top: 10px;
+        }
+
+        .profile-info {
+            font-size: 16px;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .unlock-btn {
+            background: linear-gradient(to right, #8a2387, #e94057);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(233, 64, 87, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(233, 64, 87, 0.4);
+        }
+
+        .profile-details-container {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-details-container.show {
+            display: block;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-card h3 {
+            font-size: 20px;
+            color: #e94057;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .detail-card p {
+            margin-bottom: 8px;
+            font-size: 15px;
+            color: #444;
+        }
+
+        .detail-card p strong {
+            color: #8a2387;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .detail-list li {
+            background-color: #f27121;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 14px;
+            top: 22px;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.2s ease;
+        }
+        .back-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.22); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button>
+            <h1>Riya's Kismat Profile</h1>
+            <p>Beyond Swipes, Into Souls</p>
+        </div>
+
+        <div class="profile-container" id="profile-container">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaE0xKCZf2mVffI_2irhJzo0gSv6o_y8As5Q&s" alt="Riya's Profile Photo" class="profile-photo">
+            <h2 class="profile-name">Riya, 24</h2>
+            <p class="profile-info">Mumbai, India | Digital Marketer</p>
+            <button class="unlock-btn" onclick="unlockProfile()">Unlock Profile</button>
+        </div>
+
+        <div class="profile-details-container" id="details-container">
+            <div class="detail-card">
+                <h3>About Me</h3>
+                <p>"Love good food, great music, and getting lost in new places. Looking for someone to share life's little adventures with. I'm a passionate digital marketer by day and a movie buff by night!"</p>
+            </div>
+            
+            <div class="detail-card">
+                <h3>My Details</h3>
+                <p><strong>Age:</strong> 24</p>
+                <p><strong>Date of Birth:</strong> 19-01-2001</p>
+                <p><strong>Location:</strong> Mumbai</p>
+                <p><strong>Occupation:</strong> Digital Marketer</p>
+                <p><strong>Height:</strong> 165 cm (5'5")</p>
+                <p><strong>Gender:</strong> Female</p>
+                <p><strong>Languages:</strong> English, Hindi</p>
+                <p><strong>Interested In:</strong> Men</p>
+            </div>
+
+            <div class="detail-card">
+                <h3>My Preferences</h3>
+                <p><strong>Relationship Goals:</strong> Long-term relationship</p>
+                <p><strong>Lifestyle Habits:</strong> Non-smoker, Social drinker, Fitness enthusiast</p>
+                <p><strong>Religion/Caste:</strong> Hindu</p>
+            </div>
+
+            <div class="detail-card">
+                <h3>My Hobbies</h3>
+                <ul class="detail-list">
+                    <li>Travel</li>
+                    <li>Music</li>
+                    <li>Cooking</li>
+                    <li>Reading</li>
+                    <li>Movies</li>
+                </ul>
+            </div>
+            
+            <button class="unlock-btn" onclick="nextProfile()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        function unlockProfile() {
+            const profileContainer = document.getElementById('profile-container');
+            const detailsContainer = document.getElementById('details-container');
+
+            profileContainer.style.display = 'none';
+            detailsContainer.classList.add('show');
+        }
+
+        function goBack() {
+            window.location.href = 'next_profile.html';
+        }
+
+        function nextProfile() {
+            window.location.href = 'index3.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kismat - Digital Body Language Chat</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: #f5f5f5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f9f9f9;
+            position: relative;
+        }
+        
+        .mood-panel {
+            width: 250px;
+            background: white;
+            border-left: 1px solid #e0e0e0;
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+            overflow-y: auto;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .mood-panel {
+                width: 100%;
+                height: 200px;
+                border-left: none;
+                border-bottom: 1px solid #e0e0e0;
+                padding: 15px;
+                order: -1;
+            }
+            
+            .chat-container {
+                height: calc(100vh - 200px);
+            }
+            
+            .mood-header {
+                font-size: 16px !important;
+                margin-bottom: 15px !important;
+            }
+            
+            .mood-status {
+                margin-bottom: 15px !important;
+            }
+            
+            .user-mood {
+                margin-bottom: 10px !important;
+            }
+            
+            .user-avatar {
+                width: 30px !important;
+                height: 30px !important;
+                font-size: 12px !important;
+            }
+            
+            .user-name {
+                font-size: 12px !important;
+            }
+            
+            .mood-text {
+                font-size: 10px !important;
+            }
+            
+            .indicator-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 5px !important;
+            }
+            
+            .indicator-item {
+                padding: 5px !important;
+            }
+            
+            .indicator-icon {
+                font-size: 14px !important;
+                margin-bottom: 3px !important;
+            }
+            
+            .indicator-label {
+                font-size: 9px !important;
+            }
+            
+            .indicator-value {
+                font-size: 10px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .mood-panel {
+                height: 180px;
+                padding: 10px;
+            }
+            
+            .chat-container {
+                height: calc(100vh - 180px);
+            }
+            
+            .messages-container {
+                padding: 15px 10px !important;
+            }
+            
+            .message {
+                max-width: 85% !important;
+                padding: 8px 12px !important;
+                font-size: 13px !important;
+            }
+            
+            .input-container {
+                padding: 8px 10px !important;
+            }
+            
+            #messageInput {
+                padding: 8px 12px !important;
+                font-size: 13px !important;
+            }
+            
+            .send-btn {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            
+            .chat-header {
+                padding: 12px 15px !important;
+            }
+            
+            .chat-title {
+                font-size: 16px !important;
+            }
+        }
+        
+        .mood-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ff2d55;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .mood-status {
+            margin-bottom: 25px;
+        }
+        
+        .user-mood {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffd6dd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #ff2d55;
+            font-weight: 600;
+        }
+        
+        .mood-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+        
+        .mood-bar {
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 3px;
+        }
+        
+        .mood-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease, background 0.3s;
+        }
+        
+        .mood-text {
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .mood-score {
+            font-weight: 600;
+        }
+        
+        .mood-indicators {
+            margin-top: 20px;
+        }
+        
+        .indicator-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .indicator-item {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .indicator-icon {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .indicator-label {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .indicator-value {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+        
+        .chat-header {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-title {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .chat-action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .chat-action-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_a4be512e7195b6b733d9110b408f075d.png');
+            background-repeat: repeat;
+        }
+        
+        .message {
+            max-width: 70%;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .received {
+            background: white;
+            align-self: flex-start;
+            border-top-left-radius: 4px;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+            margin-right: auto;
+        }
+        
+        .sent {
+            background: #dcf8c6;
+            align-self: flex-end;
+            border-top-right-radius: 4px;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+            margin-left: auto;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #667781;
+            text-align: right;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        
+        .message-indicators {
+            display: flex;
+            margin-right: 5px;
+        }
+        
+        .indicator {
+            font-size: 10px;
+            margin-right: 3px;
+            opacity: 0.7;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 18px;
+            width: fit-content;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #ccc;
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+            margin-right: 0;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-3px); }
+        }
+        
+        .input-container {
+            background: #f0f0f0;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        #messageInput {
+            flex: 1;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .send-btn {
+            background: #ff2d55;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .alert {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            animation: slideDown 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            z-index: 100;
+        }
+        
+        @keyframes slideDown {
+            from { top: -40px; opacity: 0; }
+            to { top: 10px; opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        .alert-emoji {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        
+        .privacy-notice {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+        
+        .privacy-icon {
+            margin-right: 5px;
+            font-size: 12px;
+            color: #4CAF50;
+        }
+        
+        /* Next Button Styles */
+        .next-btn-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .next-btn {
+            background: #ff2d55;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .next-btn:hover {
+            background: #e61e4d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        
+        .next-btn i {
+            margin-left: 8px;
+            font-size: 16px;
+        }
+        
+        /* Enhanced Menu Styles */
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .menu-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .menu-btn:hover {
+            background: #f0f0f0;
+            transform: rotate(90deg);
+        }
+        
+        .menu-btn::after {
+            content: '⋮';
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-btn:hover::after {
+            transform: scale(1.2);
+        }
+        
+        .menu-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 220px;
+            box-shadow: 0px 8px 20px 0px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            z-index: 1000;
+            overflow: hidden;
+            transform-origin: top right;
+            animation: menuFadeIn 0.2s ease-out forwards;
+            opacity: 0;
+            transform: scale(0.95);
+            margin-top: 5px;
+        }
+        
+        @keyframes menuFadeIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .menu-content.show {
+            display: block;
+        }
+        
+        .menu-item {
+            color: #333;
+            padding: 14px 18px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            font-weight: 500;
+        }
+        
+        .menu-item:hover {
+            background-color: #fff5f7;
+            border-left: 3px solid #ff2d55;
+            padding-left: 22px;
+            transform: translateX(2px);
+        }
+        
+        .menu-item i {
+            margin-right: 14px;
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #ff2d55;
+        }
+        
+        .menu-item-text {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .menu-item-arrow {
+            color: #999;
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-item:hover .menu-item-arrow {
+            transform: translateX(3px);
+        }
+        
+        /* Specific menu item styles */
+        .would-you-rather-item {
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
+        }
+        
+        .would-you-rather-item i {
+            color: #FF9800;
+            animation: wobble 2s infinite;
+        }
+        
+        .lets-meet-up-item {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffeef1 100%);
+        }
+        
+        .lets-meet-up-item i {
+            color: #E91E63;
+            animation: pulse 2s infinite;
+        }
+        
+        .situational-game-item {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .situational-game-item i {
+            color: #2196F3;
+            animation: bounce 2s infinite;
+        }
+        
+        .unlock-profile-item {
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .unlock-profile-item i {
+            color: #4CAF50;
+            animation: shine 2s infinite;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-3px); }
+            60% { transform: translateY(-2px); }
+        }
+        
+        @keyframes wobble {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            75% { transform: rotate(-3deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes shine {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* Mobile menu adjustments */
+        @media (max-width: 480px) {
+            .menu-content {
+                min-width: 200px;
+                right: -10px;
+            }
+            
+            .menu-item {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+            
+            .menu-item i {
+                margin-right: 12px;
+                width: 18px;
+                font-size: 15px;
+            }
+            
+            .menu-item-text {
+                font-size: 13px;
+            }
+        }
+        
+        /* Loading states */
+        .menu-item.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .menu-item.loading i {
+            animation: spin 1s linear infinite !important;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-title">Riya 💖</div>
+            <div class="chat-actions">
+                <button class="chat-action-btn">📞</button>
+                <div class="menu-container">
+                    <button class="menu-btn" id="menuBtn"></button>
+                    <div class="menu-content" id="menuContent">
+                        <div class="menu-item would-you-rather-item" onclick="redirectToWouldYouRather()">
+                            <i class="fas fa-question-circle"></i>
+                            <span class="menu-item-text">Would You Rather</span>
+                            <span class="menu-item-arrow">→</span>
+                        </div>
+                        <div class="menu-item lets-meet-up-item" onclick="redirectToLeetsMeetUp()">
+                            <i class="fas fa-heart"></i>
+                            <span class="menu-item-text">Let's Meet Up</span>
+                            <span class="menu-item-arrow">→</span>
+                        </div>
+                        <div class="menu-item situational-game-item" onclick="redirectToSituationalGame()">
+                            <i class="fas fa-gamepad"></i>
+                            <span class="menu-item-text">Situational Game</span>
+                            <span class="menu-item-arrow">→</span>
+                        </div>
+                        <div class="menu-item unlock-profile-item" onclick="redirectToUnlockProfile()">
+                            <i class="fas fa-lock-open"></i>
+                            <span class="menu-item-text">Unlock Profile</span>
+                            <span class="menu-item-arrow">→</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="messages-container" id="messagesContainer">
+            <div class="message received">
+                Hey there! How was your day? 😊
+                <div class="message-time">
+                    <div class="message-indicators">
+                        <span class="indicator">⚡</span>
+                        <span class="indicator">😊</span>
+                    </div>
+                    10:32 AM
+                </div>
+            </div>
+            
+            <div class="message sent">
+                It was great! Just finished a hike 🏞️
+                <div class="message-time">
+                    <div class="message-indicators">
+                        <span class="indicator">⚡</span>
+                        <span class="indicator">😄</span>
+                    </div>
+                    10:33 AM
+                </div>
+            </div>
+            
+            <div class="message received">
+                That sounds amazing! I've been meaning to go hiking too...
+                <div class="message-time">
+                    <div class="message-indicators">
+                        <span class="indicator">🐢</span>
+                        <span class="indicator">✏</span>
+                        <span class="indicator">🤔</span>
+                    </div>
+                    10:35 AM
+                </div>
+            </div>
+            
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button class="send-btn" id="sendBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+            
+            <div class="privacy-notice">
+                <span class="privacy-icon">🔒</span>
+                Processing locally
+            </div>
+        </div>
+    </div>
+    
+    <div class="mood-panel">
+        <div class="mood-header">Digital Body Language</div>
+        
+        <div class="mood-status">
+            <div class="user-mood">
+                <div class="user-avatar">R</div>
+                <div class="mood-info">
+                    <div class="user-name">Riya</div>
+                    <div class="mood-bar">
+                        <div class="mood-fill" id="themMoodBar" style="width: 68%; background: #FFC107;"></div>
+                    </div>
+                    <div class="mood-text">
+                        <span>Thinking 🤔</span>
+                        <span class="mood-score" id="themMoodScore">68%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="user-mood">
+                <div class="user-avatar">Y</div>
+                <div class="mood-info">
+                    <div class="user-name">You</div>
+                    <div class="mood-bar">
+                        <div class="mood-fill" id="meMoodBar" style="width: 82%; background: #4CAF50;"></div>
+                    </div>
+                    <div class="mood-text">
+                        <span>Engaged 😊</span>
+                        <span class="mood-score" id="meMoodScore">82%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mood-indicators">
+            <div class="indicator-title">Current Indicators</div>
+            <div class="indicator-grid">
+                <div class="indicator-item">
+                    <div class="indicator-icon">⚡</div>
+                    <div class="indicator-label">Typing Speed</div>
+                    <div class="indicator-value">Medium</div>
+                </div>
+                <div class="indicator-item">
+                    <div class="indicator-icon">⏱️</div>
+                    <div class="indicator-label">Response Time</div>
+                    <div class="indicator-value">2.4s</div>
+                </div>
+                <div class="indicator-item">
+                    <div class="indicator-icon">✏️</div>
+                    <div class="indicator-label">Edits</div>
+                    <div class="indicator-value">1.2/msg</div>
+                </div>
+                <div class="indicator-item">
+                    <div class="indicator-icon">😊</div>
+                    <div class="indicator-label">Emoji Tone</div>
+                    <div class="indicator-value">Positive</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Next Button -->
+    <div class="next-btn-container" id="nextBtnContainer">
+        <button class="next-btn" id="nextBtn">
+            Next <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const themMoodBar = document.getElementById('themMoodBar');
+        const themMoodScore = document.getElementById('themMoodScore');
+        const meMoodBar = document.getElementById('meMoodBar');
+        const meMoodScore = document.getElementById('meMoodScore');
+        const nextBtn = document.getElementById('nextBtn');
+        const nextBtnContainer = document.getElementById('nextBtnContainer');
+        const menuBtn = document.getElementById('menuBtn');
+        const menuContent = document.getElementById('menuContent');
+        
+        // Mood states
+        let theirMood = 68; // Initial mood score (0-100)
+        let myMood = 82;    // Initial mood score (0-100)
+        
+        // Mood colors
+        const moodColors = {
+            high: '#4CAF50',    // Green
+            medium: '#FFC107',  // Yellow
+            low: '#F44336'      // Red
+        };
+        
+        // Sample messages
+        const theirMessages = [
+            "I love hiking too! Where did you go?",
+            "That sounds like a perfect day 😊",
+            "I'm free this weekend if you want to go together...",
+            "What kind of trails do you prefer?",
+            "I usually pack some snacks and make a day of it 🍎"
+        ];
+        
+        const theirMoodChanges = [5, 3, 8, -2, 4];
+        const theirIndicators = [
+            {speed: '⚡', emoji: '😊'},
+            {speed: '⚡', emoji: '😊'},
+            {speed: '🐢', emoji: '😳'},
+            {speed: '⚡', emoji: '🤔'},
+            {speed: '⚡', emoji: '😄'}
+        ];
+        
+        // Toggle menu with animation
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuContent.classList.toggle('show');
+            
+            // Animate the menu button
+            if (menuContent.classList.contains('show')) {
+                menuBtn.style.transform = 'rotate(90deg)';
+                menuBtn.style.background = '#f0f0f0';
+            } else {
+                menuBtn.style.transform = 'rotate(0)';
+                menuBtn.style.background = 'transparent';
+            }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!menuBtn.contains(e.target) && !menuContent.contains(e.target)) {
+                menuContent.classList.remove('show');
+                menuBtn.style.transform = 'rotate(0)';
+                menuBtn.style.background = 'transparent';
+            }
+        });
+        
+        // Helper function to show loading state
+        function showLoadingState(item, text) {
+            item.classList.add('loading');
+            const icon = item.querySelector('i');
+            const textElement = item.querySelector('.menu-item-text');
+            
+            icon.className = 'fas fa-spinner';
+            textElement.textContent = text;
+        }
+        
+        // Menu redirect functions
+        function redirectToWouldYouRather() {
+            const item = document.querySelector('.would-you-rather-item');
+            showLoadingState(item, 'Loading game...');
+            
+            setTimeout(() => {
+                window.location.href = "index5.html";
+            }, 1500);
+        }
+        
+        function redirectToLeetsMeetUp() {
+            const item = document.querySelector('.lets-meet-up-item');
+            showLoadingState(item, 'Setting up meet...');
+            
+            setTimeout(() => {
+                window.location.href = "index6.html";
+            }, 1500);
+        }
+        
+        function redirectToSituationalGame() {
+            const item = document.querySelector('.situational-game-item');
+            showLoadingState(item, 'Loading scenarios...');
+            
+            setTimeout(() => {
+                window.location.href = "index4.html";
+            }, 1500);
+        }
+        
+        function redirectToUnlockProfile() {
+            const item = document.querySelector('.unlock-profile-item');
+            showLoadingState(item, 'Unlocking profile...');
+            
+            setTimeout(() => {
+                window.location.href = "index7.html";
+            }, 1500);
+        }
+        
+        // Next button functionality
+        nextBtn.addEventListener('click', () => {
+            // Hide next button with animation
+            nextBtnContainer.style.opacity = '0';
+            nextBtnContainer.style.transform = 'translateY(20px)';
+            
+            // Redirect after animation completes
+            setTimeout(() => {
+                window.location.href = "index2.html";
+            }, 300);
+        });
+        
+        // Update mood display
+        function updateMood() {
+            // Their mood
+            themMoodBar.style.width = theirMood + '%';
+            themMoodScore.textContent = theirMood + '%';
+            
+            // Determine their mood color
+            if (theirMood >= 70) {
+                themMoodBar.style.background = moodColors.high;
+            } else if (theirMood >= 40) {
+                themMoodBar.style.background = moodColors.medium;
+            } else {
+                themMoodBar.style.background = moodColors.low;
+            }
+            
+            // My mood
+            meMoodBar.style.width = myMood + '%';
+            meMoodScore.textContent = myMood + '%';
+            
+            // Determine my mood color
+            if (myMood >= 70) {
+                meMoodBar.style.background = moodColors.high;
+            } else if (myMood >= 40) {
+                meMoodBar.style.background = moodColors.medium;
+            } else {
+                meMoodBar.style.background = moodColors.low;
+            }
+        }
+        
+        // Show alert
+        function showAlert(emoji, text) {
+            const alert = document.createElement('div');
+            alert.className = 'alert';
+            alert.innerHTML = `
+                <span class="alert-emoji">${emoji}</span>
+                <span>${text}</span>
+            `;
+            
+            document.body.appendChild(alert);
+            
+            // Remove after animation
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+        
+        // Add message to chat
+        function addMessage(text, sender, indicators) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            const timeString = `${displayHours}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
+            
+            let indicatorsHTML = '';
+            if (indicators) {
+                indicatorsHTML = `
+                    <div class="message-indicators">
+                        <span class="indicator">${indicators.speed || ''}</span>
+                        <span class="indicator">${indicators.emoji || ''}</span>
+                    </div>
+                `;
+            }
+            
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="message-time">
+                    ${indicatorsHTML}
+                    ${timeString}
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Simulate receiving a message
+        function receiveMessage() {
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Random delay (1-3 seconds)
+            const delay = 1000 + Math.random() * 2000;
+            
+            setTimeout(() => {
+                // Remove typing indicator
+                typingDiv.remove();
+                
+                // Randomly select a message
+                const randomIndex = Math.floor(Math.random() * theirMessages.length);
+                const message = theirMessages[randomIndex];
+                const moodChange = theirMoodChanges[randomIndex];
+                const indicators = theirIndicators[randomIndex];
+                
+                // Add their message
+                addMessage(message, 'received', indicators);
+                
+                // Update their mood
+                theirMood = Math.min(100, Math.max(0, theirMood + moodChange));
+                updateMood();
+                
+                // Show alert if significant mood change
+                if (Math.abs(moodChange) >= 5) {
+                    let alertText, alertEmoji;
+                    if (moodChange > 0) {
+                        alertText = "They seem more engaged now!";
+                        alertEmoji = "😊";
+                    } else {
+                        alertText = "They seem a bit hesitant...";
+                        alertEmoji = "🤔";
+                    }
+                    showAlert(alertEmoji, alertText);
+                }
+            }, delay);
+        }
+        
+        // Send message
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (text) {
+                // Add my message
+                addMessage(text, 'sent', {
+                    speed: '⚡',
+                    emoji: text.match(/[\u{1F600}-\u{1F64F}]/gu) ? text.match(/[\u{1F600}-\u{1F64F}]/gu)[0] : '😐'
+                });
+                
+                // Clear input
+                messageInput.value = '';
+                
+                // Update my mood (random small change)
+                myMood = Math.min(100, Math.max(0, myMood + (Math.random() * 6 - 3)));
+                updateMood();
+                
+                // Simulate response after delay
+                setTimeout(() => {
+                    receiveMessage();
+                }, 1500 + Math.random() * 3000);
+            }
+        }
+        
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Initial mood update
+        updateMood();
+        
+        // Initial alert
+        setTimeout(() => {
+            showAlert("💡", "They seem engaged in the conversation");
+        }, 2000);
+        
+        // Add some interactive feedback for mobile
+        if ('ontouchstart' in window) {
+            // Add touch feedback for mobile devices
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                item.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        }
+    </script>
+</body>
+</html>

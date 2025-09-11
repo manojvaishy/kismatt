@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kismat - Situational Games</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header {
+            background: linear-gradient(to right, #8a2387, #e94057);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .progress-container {
+            background: rgba(255, 255, 255, 0.2);
+            height: 6px;
+            border-radius: 3px;
+            margin: 15px 0 5px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: white;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .content {
+            padding: 25px;
+        }
+        
+        /* Situations Menu */
+        .situations-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .situation-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .situation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: #e94057;
+        }
+        
+        .situation-card i {
+            font-size: 32px;
+            color: #e94057;
+            margin-bottom: 10px;
+        }
+        
+        .situation-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #8a2387;
+        }
+        
+        .situation-card p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* Game Play Section */
+        .game-section {
+            display: none;
+        }
+        
+        .story-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.1));
+            z-index: 1;
+        }
+        
+        .story-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .story-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 2px solid #e94057;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+        
+        .option-btn:hover {
+            background: #e94057;
+            color: white;
+        }
+        
+        .option-btn i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        /* Suggestion Box */
+        .suggestion-box {
+            background: #f0f4f8;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .suggestion-box h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #8a2387;
+        }
+        
+        .suggestion-input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .send-suggestion {
+            background: linear-gradient(to right, #8a2387, #e94057);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .send-suggestion:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 64, 87, 0.4);
+        }
+        
+        /* Game Controls */
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .control-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-prev {
+            background: #f5f5f5;
+            color: #777;
+        }
+        
+        .btn-next {
+            background: linear-gradient(to right, #8a2387, #e94057);
+            color: white;
+        }
+        
+        .btn-random {
+            background: #4a90e2;
+            color: white;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Results Section */
+        .results-section {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .results-section h2 {
+            font-size: 28px;
+            color: #8a2387;
+            margin-bottom: 20px;
+        }
+        
+        .compatibility-score {
+            font-size: 72px;
+            font-weight: 700;
+            color: #e94057;
+            margin: 20px 0;
+        }
+        
+        .compatibility-bar {
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+        
+        .compatibility-fill {
+            height: 100%;
+            background: linear-gradient(to right, #8a2387, #e94057);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1.5s ease-in-out;
+        }
+        
+        .play-again {
+            background: linear-gradient(to right, #8a2387, #e94057);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .play-again:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(233, 64, 87, 0.4);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .situations-menu {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 10px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .story-text {
+                font-size: 16px;
+            }
+            
+            .option-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .control-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        .timer {
+            background: #ff4757;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Kismat Situational Games</h1>
+            <p>Choose a scenario and see how you both respond</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Situations Menu -->
+            <div class="situations-menu" id="situationsMenu">
+                <div class="situation-card" onclick="startGame('firstDate')">
+                    <i class="fas fa-heart"></i>
+                    <h3>First Date Adventure</h3>
+                    <p>Navigate through an unexpected first date scenario</p>
+                </div>
+                
+                <div class="situation-card" onclick="startGame('lostCity')">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Lost in a City</h3>
+                    <p>Find your way together in an unfamiliar place</p>
+                </div>
+                
+                <div class="situation-card" onclick="startGame('unexpectedTrip')">
+                    <i class="fas fa-suitcase-rolling"></i>
+                    <h3>Unexpected Trip</h3>
+                    <p>Plan a spontaneous getaway together</p>
+                </div>
+                
+                <div class="situation-card" onclick="startGame('romanticDinner')">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Romantic Dinner Gone Wrong</h3>
+                    <p>Handle a dinner date with unexpected surprises</p>
+                </div>
+                
+                <div class="situation-card" onclick="startGame('stormyNight')">
+                    <i class="fas fa-cloud-showers-heavy"></i>
+                    <h3>Stormy Night In</h3>
+                    <p>Make the most of a power outage during a storm</p>
+                </div>
+                
+                <div class="situation-card" onclick="startRandomGame()">
+                    <i class="fas fa-random"></i>
+                    <h3>Random Situation</h3>
+                    <p>Let us surprise you with a random scenario</p>
+                </div>
+            </div>
+            
+            <!-- Game Play Section -->
+            <div class="game-section" id="gameSection">
+                <div class="story-card">
+                    <div class="story-content">
+                        <div class="timer" id="timer" style="display: none;">Time left: <span id="timeLeft">15</span>s</div>
+                        <div class="story-text" id="storyText"></div>
+                        
+                        <div class="options-container" id="optionsContainer"></div>
+                    </div>
+                </div>
+                
+                <div class="suggestion-box">
+                    <h3>Have your own idea? Share it!</h3>
+                    <textarea class="suggestion-input" id="suggestionInput" placeholder="Type your custom response or idea here..."></textarea>
+                    <button class="send-suggestion" onclick="sendSuggestion()">
+                        <i class="fas fa-paper-plane"></i> Send to Chat
+                    </button>
+                </div>
+                
+                <div class="game-controls">
+                    <button class="control-btn btn-prev" onclick="previousQuestion()">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="control-btn btn-next" onclick="nextQuestion()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="control-btn btn-random" onclick="startRandomGame()">
+                        <i class="fas fa-random"></i> Random
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <h2>Game Summary</h2>
+                <p>See how your choices aligned with your partner's</p>
+                
+                <div class="compatibility-score" id="compatibilityScore">0%</div>
+                
+                <div class="compatibility-bar">
+                    <div class="compatibility-fill" id="compatibilityFill"></div>
+                </div>
+                
+                <p id="summaryText">You both chose the same option in <span id="matchCount">0</span> out of 15 situations.</p>
+                
+                <button class="play-again" onclick="resetGame()">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game data for different scenarios
+        const gameScenarios = {
+            firstDate: {
+                title: "First Date Adventure",
+                questions: [
+                    {
+                        story: "You're on a first date at a nice café when suddenly the lights go out. The staff says it's a city-wide power outage that might last hours.",
+                        options: [
+                            "Suggest going for a walk in the nearby park",
+                            "Stay and make the most of it with candlelight",
+                            "Offer to drive them home immediately"
+                        ]
+                    },
+                    {
+                        story: "As you're walking, you stumble upon a street festival with live music and food stalls.",
+                        options: [
+                            "Suggest checking out the festival together",
+                            "Continue with your original plan for a quiet walk",
+                            "Ask if they'd like to get food from one of the stalls"
+                        ]
+                    },
+                    {
+                        story: "At the festival, you see someone offering free dance lessons. Your date seems interested.",
+                        options: [
+                            "Enthusiastically join the dance lesson",
+                            "Watch for a while before participating",
+                            "Suggest doing something else instead"
+                        ]
+                    },
+                    // Additional questions would be added here up to 15
+                ]
+            },
+            lostCity: {
+                title: "Lost in a City",
+                questions: [
+                    {
+                        story: "You're exploring a foreign city together when you realize you're completely lost. Your phone batteries are dying.",
+                        options: [
+                            "Find a café to charge phones and ask for directions",
+                            "Keep walking hoping to recognize something",
+                            "Approach a local to ask for help"
+                        ]
+                    },
+                    {
+                        story: "You find a beautiful hidden courtyard that isn't on any tourist maps.",
+                        options: [
+                            "Spend time exploring this hidden gem",
+                            "Take a quick photo but continue finding your way",
+                            "Ignore it and focus on getting back to familiar area"
+                        ]
+                    },
+                    // Additional questions would be added here up to 15
+                ]
+            },
+            // Other scenarios would follow the same structure
+        };
+        
+        // Game state variables
+        let currentScenario = null;
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let timerInterval = null;
+        
+        // DOM elements
+        const situationsMenu = document.getElementById('situationsMenu');
+        const gameSection = document.getElementById('gameSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const storyText = document.getElementById('storyText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const progressBar = document.getElementById('progressBar');
+        const timer = document.getElementById('timer');
+        const timeLeft = document.getElementById('timeLeft');
+        const compatibilityScore = document.getElementById('compatibilityScore');
+        const compatibilityFill = document.getElementById('compatibilityFill');
+        const matchCount = document.getElementById('matchCount');
+        const summaryText = document.getElementById('summaryText');
+        
+        // Start a game with a specific scenario
+        function startGame(scenario) {
+            currentScenario = scenario;
+            currentQuestion = 0;
+            userAnswers = [];
+            
+            // Hide menu, show game section
+            situationsMenu.style.display = 'none';
+            gameSection.style.display = 'block';
+            resultsSection.style.display = 'none';
+            
+            // Load the first question
+            loadQuestion();
+        }
+        
+        // Start a random game
+        function startRandomGame() {
+            const scenarios = Object.keys(gameScenarios);
+            const randomScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            startGame(randomScenario);
+        }
+        
+        // Load the current question
+        function loadQuestion() {
+            const scenario = gameScenarios[currentScenario];
+            const question = scenario.questions[currentQuestion];
+            
+            // Update progress bar
+            progressBar.style.width = `${((currentQuestion + 1) / scenario.questions.length) * 100}%`;
+            
+            // Set story text
+            storyText.textContent = question.story;
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            
+            // Add new options
+            question.options.forEach((option, index) => {
+                const optionButton = document.createElement('button');
+                optionButton.className = 'option-btn fade-in';
+                optionButton.innerHTML = `<i class="fas fa-${getOptionIcon(index)}"></i> ${option}`;
+                optionButton.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionButton);
+            });
+            
+            // Start timer for this question (randomly for some questions)
+            if (Math.random() > 0.7) {
+                startTimer();
+            } else {
+                timer.style.display = 'none';
+            }
+        }
+        
+        // Get icon for option based on index
+        function getOptionIcon(index) {
+            const icons = ['heart', 'star', 'lightbulb', 'compass', 'map-marker-alt'];
+            return icons[index] || 'circle';
+        }
+        
+        // Start a 15-second timer for the current question
+        function startTimer() {
+            timer.style.display = 'inline-block';
+            let timeRemaining = 15;
+            timeLeft.textContent = timeRemaining;
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                timeLeft.textContent = timeRemaining;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    // Auto-select a random option if time runs out
+                    const randomOption = Math.floor(Math.random() * gameScenarios[currentScenario].questions[currentQuestion].options.length);
+                    selectOption(randomOption);
+                }
+            }, 1000);
+        }
+        
+        // Handle option selection
+        function selectOption(optionIndex) {
+            // Clear timer if active
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            
+            // Save the answer
+            userAnswers[currentQuestion] = optionIndex;
+            
+            // Move to next question or show results
+            if (currentQuestion < gameScenarios[currentScenario].questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+        
+        // Navigate to previous question
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+        
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestion < gameScenarios[currentScenario].questions.length - 1) {
+                // If no answer selected for current question, select a random one
+                if (userAnswers[currentQuestion] === undefined) {
+                    userAnswers[currentQuestion] = Math.floor(Math.random() * gameScenarios[currentScenario].questions[currentQuestion].options.length);
+                }
+                
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+        
+        // Send suggestion to chat
+        function sendSuggestion() {
+            const suggestionInput = document.getElementById('suggestionInput');
+            const suggestion = suggestionInput.value.trim();
+            
+            if (suggestion) {
+                // In a real app, this would send the message to the chat
+                alert(`Suggestion sent to chat: "${suggestion}"`);
+                suggestionInput.value = '';
+            } else {
+                alert('Please type a suggestion first');
+            }
+        }
+        
+        // Show game results
+        function showResults() {
+            gameSection.style.display = 'none';
+            resultsSection.style.display = 'block';
+            
+            // Calculate compatibility (random for demo)
+            const compatibility = Math.floor(Math.random() * 41) + 60; // 60-100%
+            
+            // Animate compatibility score
+            animateValue(compatibilityScore, 0, compatibility, 1500);
+            animateValue(compatibilityFill, 0, compatibility, 1500);
+            
+            // Set match count text
+            const matches = Math.floor((compatibility / 100) * gameScenarios[currentScenario].questions.length);
+            matchCount.textContent = matches;
+            
+            // Set summary text based on compatibility
+            if (compatibility >= 90) {
+                summaryText.innerHTML = `Amazing! You're highly compatible with <span class="highlight">${compatibility}%</span> match!`;
+            } else if (compatibility >= 70) {
+                summaryText.innerHTML = `Great! You have good compatibility with <span class="highlight">${compatibility}%</span> match.`;
+            } else {
+                summaryText.innerHTML = `You have <span class="highlight">${compatibility}%</span> compatibility. Try another scenario!`;
+            }
+        }
+        
+        // Animate value changes
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                
+                if (element === compatibilityScore) {
+                    element.textContent = value + '%';
+                } else if (element === compatibilityFill) {
+                    element.style.width = value + '%';
+                }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Reset the game
+        function resetGame() {
+            situationsMenu.style.display = 'grid';
+            gameSection.style.display = 'none';
+            resultsSection.style.display = 'none';
+            progressBar.style.width = '0%';
+        }
+        
+        // Initialize the page
+        window.onload = function() {
+            // Any initialization code can go here
+        };
+    </script>
+</body>
+</html>
