@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kismat Lets Meet Up - Find Your Perfect Match</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(to right, #8a2387, #e94057);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .profile-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+        }
+
+        .profile-info {
+            padding: 25px;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8a2387;
+            margin-bottom: 8px;
+        }
+
+        .profile-age {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .profile-bio {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .profile-interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .interest-tag {
+            background: linear-gradient(45deg, #8a2387, #e94057);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .unlock-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #8a2387, #e94057);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .unlock-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(138, 35, 135, 0.4);
+        }
+
+        .locked-content {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+
+        .lock-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: white;
+            z-index: 10;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #e94057;
+        }
+
+        .modal-profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
+            border: 5px solid #e94057;
+        }
+
+        .modal-title {
+            text-align: center;
+            color: #8a2387;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #8a2387;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .info-content {
+            color: #555;
+            line-height: 1.6;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .request-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #8a2387, #e94057);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .request-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(138, 35, 135, 0.4);
+        }
+
+        /* Match Popup */
+        .match-popup {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            min-width: 400px;
+        }
+
+        .match-popup h2 {
+            color: #e94057;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .match-popup p {
+            color: #555;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .match-popup button {
+            background: linear-gradient(45deg, #8a2387, #e94057);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .next-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .next-btn {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #f27121, #e94057);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(242, 113, 33, 0.4);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(242, 113, 33, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .profiles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                padding: 20px;
+            }
+            
+            .match-popup {
+                min-width: 300px;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💕 Kismat Lets Meet Up</h1>
+        <p>Find Your Perfect Match & Start Your Love Story</p>
+    </div>
+
+    <div class="container">
+        <div class="profiles-grid">
+            <!-- Profile 1 -->
+            <div class="profile-card">
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=280&fit=crop&crop=face" alt="Profile" class="profile-image">
+                    <div class="profile-overlay"></div>
+                    <div class="lock-icon">🔒</div>
+                </div>
+                <div class="profile-info">
+                    <h3 class="profile-name">Priya Sharma</h3>
+                    <p class="profile-age">25 years old • Mumbai</p>
+                    <p class="profile-bio">Creative soul who loves painting, dancing, and exploring new places. Looking for someone genuine to share life's beautiful moments with. ✨</p>
+                    <div class="profile-interests">
+                        <span class="interest-tag">Art</span>
+                        <span class="interest-tag">Travel</span>
+                        <span class="interest-tag">Dancing</span>
+                    </div>
+                    <button class="unlock-btn" onclick="unlockProfile(1)">🔓 Unlock Profile</button>
+                </div>
+            </div>
+
+            <!-- Profile 2 -->
+            <div class="profile-card">
+                <div style="position: relative; overflow: hidden;">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=280&fit=crop&crop=face" alt="Profile" class="profile-image">
+                    <div class="profile-overlay"></div>
+                    <div class="lock-icon">🔒</div>
+                </div>
+                <div class="profile-info">
+                    <h3 class="profile-name">Arjun Patel</h3>
+                    <p class="profile-age">28 years old • Delhi</p>
+                    <p class="profile-bio">Tech enthusiast and fitness lover. Enjoys cooking, hiking, and meaningful conversations. Seeking a partner to build dreams together. 🌟</p>
+                    <div class="profile-interests">
+                        <span class="interest-tag">Technology</span>
+                        <span class="interest-tag">Fitness</span>
+                        <span class="interest-tag">Cooking</span>
+                    </div>
+                    <button class="unlock-btn" onclick="unlockProfile(2)">🔓 Unlock Profile</button>
+                </div>
+            </div>
+
+            <!-- Profile 3 -->
+            <div class="profile-card">
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=280&fit=crop&crop=face" alt="Profile" class="profile-image">
+                    <div class="profile-overlay"></div>
+                    <div class="lock-icon">🔒</div>
+                </div>
+                <div class="profile-info">
+                    <h3 class="profile-name">Sneha Gupta</h3>
+                    <p class="profile-age">26 years old • Bangalore</p>
+                    <p class="profile-bio">Doctor by profession, dreamer by heart. Loves reading, yoga, and helping others. Searching for someone who values kindness and honesty. 💖</p>
+                    <div class="profile-interests">
+                        <span class="interest-tag">Healthcare</span>
+                        <span class="interest-tag">Yoga</span>
+                        <span class="interest-tag">Reading</span>
+                    </div>
+                    <button class="unlock-btn" onclick="unlockProfile(3)">🔓 Unlock Profile</button>
+                </div>
+            </div>
+
+            <!-- Profile 4 -->
+            <div class="profile-card">
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=280&fit=crop&crop=face" alt="Profile" class="profile-image">
+                    <div class="profile-overlay"></div>
+                    <div class="lock-icon">🔒</div>
+                </div>
+                <div class="profile-info">
+                    <h3 class="profile-name">Vikram Singh</h3>
+                    <p class="profile-age">30 years old • Chennai</p>
+                    <p class="profile-bio">Entrepreneur with a passion for music and adventure sports. Believes in living life to the fullest. Looking for a life partner to share adventures. 🏔️</p>
+                    <div class="profile-interests">
+                        <span class="interest-tag">Business</span>
+                        <span class="interest-tag">Music</span>
+                        <span class="interest-tag">Adventure</span>
+                    </div>
+                    <button class="unlock-btn" onclick="unlockProfile(4)">🔓 Unlock Profile</button>
+                </div>
+            </div>
+
+            <!-- Profile 5 -->
+            <div class="profile-card">
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=280&fit=crop&crop=face" alt="Profile" class="profile-image">
+                    <div class="profile-overlay"></div>
+                    <div class="lock-icon">🔒</div>
+                </div>
+                <div class="profile-info">
+                    <h3 class="profile-name">Ananya Iyer</h3>
+                    <p class="profile-age">24 years old • Pune</p>
+                    <p class="profile-bio">Fashion designer who loves creativity and innovation. Enjoys photography, cafe hopping, and deep conversations. Seeking a soulmate connection. 📸</p>
+                    <div class="profile-interests">
+                        <span class="interest-tag">Fashion</span>
+                        <span class="interest-tag">Photography</span>
+                        <span class="interest-tag">Coffee</span>
+                    </div>
+                    <button class="unlock-btn" onclick="unlockProfile(5)">🔓 Unlock Profile</button>
+                </div>
+            </div>
+
+            <!-- Profile 6 -->
+            <div class="profile-card">
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=280&fit=crop&crop=face" alt="Profile" class="profile-image">
+                    <div class="profile-overlay"></div>
+                    <div class="lock-icon">🔒</div>
+                </div>
+                <div class="profile-info">
+                    <h3 class="profile-name">Rohit Kumar</h3>
+                    <p class="profile-age">27 years old • Hyderabad</p>
+                    <p class="profile-bio">Software engineer with a love for gaming and movies. Family-oriented person who values relationships. Ready to find someone special to grow old with. 🎮</p>
+                    <div class="profile-interests">
+                        <span class="interest-tag">Gaming</span>
+                        <span class="interest-tag">Movies</span>
+                        <span class="interest-tag">Family</span>
+                    </div>
+                    <button class="unlock-btn" onclick="unlockProfile(6)">🔓 Unlock Profile</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-section">
+            <button class="next-btn" onclick="window.location.href='index2.html'">
+                Continue to Next Step ➡️
+            </button>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" src="" alt="Profile" class="modal-profile-image">
+            <h2 id="modalName" class="modal-title"></h2>
+            <p id="modalAge" class="modal-subtitle"></p>
+            
+            <div class="info-section">
+                <div class="info-label">About Me</div>
+                <div id="modalBio" class="info-content"></div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-label">Lifestyle & Habits</div>
+                <div id="modalHabits" class="info-content"></div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-label">What I'm Looking For</div>
+                <div id="modalLooking" class="info-content"></div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-label">Personal Details</div>
+                <div id="modalDetails" class="info-content"></div>
+            </div>
+
+            <button class="request-btn" onclick="requestToTalk()">
+                💬 Request to Talk & Make a Perfect Match
+            </button>
+        </div>
+    </div>
+
+    <!-- Match Popup -->
+    <div id="matchPopup" class="match-popup">
+        <h2>🎉 Perfect Match!</h2>
+        <p>Congratulations! Your request has been sent successfully. <br><br>
+        <strong id="matchedName"></strong> will be connected with you as soon as possible. Get ready for something amazing! ✨</p>
+        <button onclick="closeMatchPopup()">Awesome! 😊</button>
+    </div>
+
+    <script>
+        const profiles = {
+            1: {
+                name: "Priya Sharma",
+                age: "25 years old • Mumbai",
+                image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=280&fit=crop&crop=face",
+                bio: "Creative soul who loves painting, dancing, and exploring new places. I'm an artist at heart with a passion for bringing beauty into the world through my work. I believe life is meant to be lived colorfully and authentically.",
+                habits: "Early riser who starts her day with yoga and meditation. Loves weekend art exhibitions, enjoys cooking healthy meals, and has a reading habit before bed. Non-smoker, occasional social drinker.",
+                looking: "Seeking someone genuine, emotionally mature, and supportive of my creative pursuits. Someone who appreciates art, loves deep conversations, and is ready for a committed relationship filled with growth and adventure.",
+                details: "Height: 5'4\", Education: Fine Arts Graduate, Profession: Graphic Designer, Family: Close-knit family, Interests: Painting, Classical Dance, Travel Photography"
+            },
+            2: {
+                name: "Arjun Patel",
+                age: "28 years old • Delhi",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=280&fit=crop&crop=face",
+                bio: "Tech enthusiast and fitness lover who believes in balance. I'm passionate about innovation and staying healthy. Love exploring new technologies while maintaining a active lifestyle.",
+                habits: "Morning gym routine, enjoys weekend hiking, loves experimenting with new recipes. Tech podcast listener, maintains work-life balance, non-smoker, fitness-focused lifestyle.",
+                looking: "Looking for an intelligent, ambitious partner who shares similar values about health and growth. Someone who appreciates technology, enjoys outdoor activities, and wants to build a beautiful future together.",
+                details: "Height: 6'0\", Education: Computer Engineering, Profession: Software Architect, Family: Joint family background, Interests: Coding, Mountain Biking, Cooking"
+            },
+            3: {
+                name: "Sneha Gupta",
+                age: "26 years old • Bangalore",
+                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=280&fit=crop&crop=face",
+                bio: "Doctor by profession, dreamer by heart. I'm dedicated to helping others heal while nurturing my own soul through yoga and literature. Believe in the power of compassion and kindness.",
+                habits: "Early morning yoga practitioner, avid reader of both medical journals and fiction. Volunteers at free medical camps on weekends, enjoys herbal teas, maintains a healthy vegetarian diet.",
+                looking: "Seeking a kind-hearted, understanding partner who respects my profession and shares humanitarian values. Someone who appreciates depth, supports personal growth, and values family bonds.",
+                details: "Height: 5'3\", Education: MBBS, Profession: General Physician, Family: Traditional family values, Interests: Medical Research, Yoga, Classical Literature"
+            },
+            4: {
+                name: "Vikram Singh",
+                age: "30 years old • Chennai",
+                image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=280&fit=crop&crop=face",
+                bio: "Entrepreneur with a passion for music and adventure sports. I believe in taking calculated risks in business and life. Love pushing boundaries and exploring new horizons.",
+                habits: "Early morning runner, plays guitar in the evenings, weekend adventure trips. Enjoys networking events, reads business books, practices meditation for focus and clarity.",
+                looking: "Looking for an adventurous, independent partner who can be my companion in both business and life journeys. Someone who loves music, appreciates entrepreneurial spirit, and is ready for exciting adventures.",
+                details: "Height: 5'11\", Education: MBA, Profession: Tech Startup Founder, Family: Business family background, Interests: Rock Climbing, Guitar, Business Strategy"
+            },
+            5: {
+                name: "Ananya Iyer",
+                age: "24 years old • Pune",
+                image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=280&fit=crop&crop=face",
+                bio: "Fashion designer who loves creativity and innovation. I express myself through colors, fabrics, and designs. Photography is my way of capturing beauty in everyday moments.",
+                habits: "Creative morning sessions with sketching, loves exploring vintage markets and cafes. Evening photography walks, enjoys documenting fashion trends, has a collection of art books.",
+                looking: "Seeking a creative, open-minded partner who appreciates art and fashion. Someone who supports my dreams, loves exploring culture together, and values aesthetic beauty in life.",
+                details: "Height: 5'5\", Education: Fashion Design, Profession: Fashion Designer, Family: Arts-loving family, Interests: Fashion Styling, Portrait Photography, Café Culture"
+            },
+            6: {
+                name: "Rohit Kumar",
+                age: "27 years old • Hyderabad",
+                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=280&fit=crop&crop=face",
+                bio: "Software engineer with a love for gaming and movies. I'm a tech geek who values family relationships and simple pleasures. Believe in building strong foundations for lasting happiness.",
+                habits: "Regular gaming sessions with friends, weekly movie marathons, Sunday family dinners. Enjoys learning new programming languages, follows tech blogs, maintains a home workout routine.",
+                looking: "Looking for a caring, family-oriented partner who can appreciate both my geeky side and family values. Someone who enjoys simple pleasures, loves movies, and wants to build a warm, loving home.",
+                details: "Height: 5'9\", Education: Computer Science, Profession: Senior Software Engineer, Family: Close family ties, Interests: Gaming, Cinema, Home Technology"
+            }
+        };
+
+        function unlockProfile(profileId) {
+            const profile = profiles[profileId];
+            
+            document.getElementById('modalImage').src = profile.image;
+            document.getElementById('modalName').textContent = profile.name;
+            document.getElementById('modalAge').textContent = profile.age;
+            document.getElementById('modalBio').textContent = profile.bio;
+            document.getElementById('modalHabits').textContent = profile.habits;
+            document.getElementById('modalLooking').textContent = profile.looking;
+            document.getElementById('modalDetails').textContent = profile.details;
+            
+            document.getElementById('profileModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function requestToTalk() {
+            const name = document.getElementById('modalName').textContent;
+            document.getElementById('matchedName').textContent = name;
+            
+            closeModal();
+            document.getElementById('matchPopup').style.display = 'block';
+        }
+
+        function closeMatchPopup() {
+            document.getElementById('matchPopup').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('profileModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
