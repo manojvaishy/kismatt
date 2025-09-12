@@ -402,7 +402,7 @@
         <div class="modal">
             <h2>You're Meant to Meet! 💕</h2>
             <p>Riya and Rohan can't wait anymore! Let's decide on a place and make this date happen.</p>
-            <button class="modal-btn" onclick="redirectToMeetUp()">Confirm Meet Up</button>
+            <button class="modal-btn" onclick="redirectToIndex()">Confirm Meet Up</button>
         </div>
     </div>
 
@@ -448,11 +448,9 @@
             document.getElementById('modalOverlay').classList.add('active');
         }
         
-        // Redirect to meet up page
-        function redirectToMeetUp() {
-            // In a real app, this would redirect to the meet up page
-            alert("Redirecting to meet up confirmation page...");
-             window.location.href = "index6.html";
+        // Redirect to index.html
+        function redirectToIndex() {
+            window.location.href = "index.html";
         }
         
         // Simulate distance decreasing (for demo purposes)
