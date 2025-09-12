@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kismat - Let's Meet Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hearts-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0;
+            color: #ff6b6b;
+            animation: float 6s ease-in infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-300px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .distance-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .couple-names {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .heart-icon {
+            color: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .distance {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tagline {
+            font-size: 18px;
+            font-style: italic;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .countdown {
+            font-size: 16px;
+            margin-top: 15px;
+            opacity: 0.8;
+        }
+        
+        .map-container {
+            position: relative;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+        
+        .user-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #8a2387, #e94057);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 3px solid white;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .distance-line {
+            position: absolute;
+            top: 50%;
+            left: 90px;
+            right: 90px;
+            height: 4px;
+            background: linear-gradient(to right, transparent, #fff, transparent);
+            transform: translateY(-50%);
+        }
+        
+        .distance-dots {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 10px;
+            transform: translateY(-50%);
+        }
+        
+        .dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: moveDots 3s linear infinite;
+        }
+        
+        @keyframes moveDots {
+            0% {
+                transform: translateX(0) scale(1);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateX(300px) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        .action-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(to right, #8a2387, #e94057);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(142, 45, 126, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(142, 45, 126, 0.6);
+        }
+        
+        .action-btn:active {
+            transform: translateY(1px);
+        }
+        
+        /* Popup Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal {
+            background: linear-gradient(135deg, #8a2387, #e94057);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .modal p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .modal-btn {
+            padding: 15px 30px;
+            background: white;
+            color: #e94057;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .couple-names {
+                font-size: 24px;
+            }
+            
+            .distance {
+                font-size: 36px;
+            }
+            
+            .map-container {
+                padding: 0 20px;
+            }
+            
+            .user-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <div class="container">
+        <div class="content">
+            <div class="header">
+                <h1>Let's Meet Up</h1>
+                <p>The universe is bringing you closer together</p>
+            </div>
+            
+            <div class="distance-card">
+                <div class="couple-names">
+                    <span>Riya</span> 
+                    <i class="fas fa-heart heart-icon"></i> 
+                    <span>Rohan</span>
+                </div>
+                
+                <div class="distance" id="distance">5.2 km</div>
+                
+                <p class="tagline">The universe is pulling you closer... step by step, heartbeat by heartbeat.</p>
+                
+                <p class="countdown" id="countdown">Every moment is bringing you closer...</p>
+            </div>
+            
+            <div class="map-container">
+                <div class="user-marker">
+                    <div class="user-avatar">R</div>
+                    <div class="user-name">Riya</div>
+                </div>
+                
+                <div class="distance-line">
+                    <div class="distance-dots" id="distanceDots"></div>
+                </div>
+                
+                <div class="user-marker">
+                    <div class="user-avatar">R</div>
+                    <div class="user-name">Rohan</div>
+                </div>
+            </div>
+            
+            <button class="action-btn" onclick="showExcitementPopup()">
+                <i class="fas fa-glass-cheers"></i> Ready to Meet Up
+            </button>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2>You're Meant to Meet! 💕</h2>
+            <p>Riya and Rohan can't wait anymore! Let's decide on a place and make this date happen.</p>
+            <button class="modal-btn" onclick="redirectToMeetUp()">Confirm Meet Up</button>
+        </div>
+    </div>
+
+    <script>
+        // Create floating hearts
+        function createHearts() {
+            const heartsContainer = document.getElementById('heartsContainer');
+            const heartCount = 20;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                heart.classList.add('heart');
+                
+                // Random position
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                
+                heartsContainer.appendChild(heart);
+            }
+        }
+        
+        // Create moving dots between users
+        function createDistanceDots() {
+            const dotsContainer = document.getElementById('distanceDots');
+            const dotCount = 10;
+            
+            for (let i = 0; i < dotCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                
+                // Random position and delay
+                dot.style.left = Math.random() * 100 + '%';
+                dot.style.animationDelay = Math.random() * 3 + 's';
+                
+                dotsContainer.appendChild(dot);
+            }
+        }
+        
+        // Show excitement popup
+        function showExcitementPopup() {
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+        
+        // Redirect to meet up page
+        function redirectToMeetUp() {
+            // In a real app, this would redirect to the meet up page
+            alert("Redirecting to meet up confirmation page...");
+            // window.location.href = "index6.html";
+        }
+        
+        // Simulate distance decreasing (for demo purposes)
+        function simulateDistanceDecrease() {
+            const distanceElement = document.getElementById('distance');
+            const countdownElement = document.getElementById('countdown');
+            let distance = 5.2;
+            
+            const interval = setInterval(() => {
+                if (distance > 0.1) {
+                    distance -= 0.1;
+                    distanceElement.textContent = distance.toFixed(1) + ' km';
+                    
+                    // Update countdown message
+                    if (distance < 1) {
+                        countdownElement.textContent = "You're almost there!";
+                    } else if (distance < 2) {
+                        countdownElement.textContent = "Getting closer with every second...";
+                    } else if (distance < 3) {
+                        countdownElement.textContent = "The distance is shrinking fast!";
+                    }
+                } else {
+                    clearInterval(interval);
+                    distanceElement.textContent = "You've arrived!";
+                    countdownElement.textContent = "Time to meet each other!";
+                }
+            }, 3000);
+        }
+        
+        // Initialize the page
+        window.onload = function() {
+            createHearts();
+            createDistanceDots();
+            simulateDistanceDecrease();
+        };
+    </script>
+</body>
+</html>
