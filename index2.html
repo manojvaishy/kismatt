@@ -6,21 +6,21 @@
     <title>Kismat - Digital Body Language Chat</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
         }
-
+        
         body {
             background: #f5f5f5;
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
-
+        
         .chat-container {
             flex: 1;
             display: flex;
@@ -28,7 +28,7 @@
             background: #f9f9f9;
             position: relative;
         }
-
+        
         .mood-panel {
             width: 250px;
             background: white;
@@ -37,107 +37,119 @@
             box-shadow: -2px 0 5px rgba(0,0,0,0.05);
             overflow-y: auto;
         }
-
-        /* Mobile Responsive Styles: The key changes are here to ensure proper layout */
+        
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
             }
-
+            
             .mood-panel {
                 width: 100%;
-                /* Use a minimum height instead of fixed height for better flexibility */
-                min-height: 220px;
+                height: 200px;
                 border-left: none;
                 border-bottom: 1px solid #e0e0e0;
                 padding: 15px;
                 order: -1;
             }
-
+            
             .chat-container {
-                /* This is the main change: flex: 1 makes it take all remaining vertical space */
-                flex: 1;
-                height: auto; /* Remove fixed height calculation for better keyboard support */
+                height: calc(100vh - 200px);
             }
-
-            .messages-container {
-                /* Let the messages container grow to fill the available space */
-                flex-grow: 1;
-                overflow-y: auto;
-            }
-
+            
             .mood-header {
                 font-size: 16px !important;
                 margin-bottom: 15px !important;
-                text-align: left;
             }
-
+            
             .mood-status {
                 margin-bottom: 15px !important;
             }
-
+            
             .user-mood {
                 margin-bottom: 10px !important;
             }
-
+            
             .user-avatar {
                 width: 30px !important;
                 height: 30px !important;
                 font-size: 12px !important;
             }
-
+            
             .user-name {
                 font-size: 12px !important;
             }
-
+            
             .mood-text {
                 font-size: 10px !important;
             }
+            
+            .indicator-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 5px !important;
+            }
+            
+            .indicator-item {
+                padding: 5px !important;
+            }
+            
+            .indicator-icon {
+                font-size: 14px !important;
+                margin-bottom: 3px !important;
+            }
+            
+            .indicator-label {
+                font-size: 9px !important;
+            }
+            
+            .indicator-value {
+                font-size: 10px !important;
+            }
         }
-
+        
         @media (max-width: 480px) {
             .mood-panel {
-                min-height: 180px;
+                height: 180px;
                 padding: 10px;
             }
-
+            
             .chat-container {
-                height: auto;
+                height: calc(100vh - 180px);
             }
-
+            
             .messages-container {
                 padding: 15px 10px !important;
             }
-
+            
             .message {
                 max-width: 85% !important;
                 padding: 8px 12px !important;
                 font-size: 13px !important;
             }
-
+            
             .input-container {
                 padding: 8px 10px !important;
             }
-
+            
             #messageInput {
                 padding: 8px 12px !important;
                 font-size: 13px !important;
             }
-
+            
             .send-btn {
                 width: 32px !important;
                 height: 32px !important;
             }
-
+            
             .chat-header {
                 padding: 12px 15px !important;
             }
-
+            
             .chat-title {
                 font-size: 16px !important;
             }
         }
-
+        
         .mood-header {
             font-size: 18px;
             font-weight: 600;
@@ -145,17 +157,17 @@
             margin-bottom: 20px;
             text-align: center;
         }
-
+        
         .mood-status {
             margin-bottom: 25px;
         }
-
+        
         .user-mood {
             display: flex;
             align-items: center;
             margin-bottom: 15px;
         }
-
+        
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -168,17 +180,17 @@
             color: #ff2d55;
             font-weight: 600;
         }
-
+        
         .mood-info {
             flex: 1;
         }
-
+        
         .user-name {
             font-weight: 500;
             font-size: 14px;
             margin-bottom: 3px;
         }
-
+        
         .mood-bar {
             height: 6px;
             background: #eee;
@@ -186,63 +198,63 @@
             overflow: hidden;
             margin-bottom: 3px;
         }
-
+        
         .mood-fill {
             height: 100%;
             border-radius: 3px;
             transition: width 0.5s ease, background 0.3s;
         }
-
+        
         .mood-text {
             font-size: 12px;
             display: flex;
             justify-content: space-between;
         }
-
+        
         .mood-score {
             font-weight: 600;
         }
-
+        
         .mood-indicators {
             margin-top: 20px;
         }
-
+        
         .indicator-title {
             font-size: 14px;
             font-weight: 500;
             margin-bottom: 10px;
             color: #666;
         }
-
+        
         .indicator-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
         }
-
+        
         .indicator-item {
             background: #f8f8f8;
             border-radius: 8px;
             padding: 8px;
             text-align: center;
         }
-
+        
         .indicator-icon {
             font-size: 18px;
             margin-bottom: 5px;
         }
-
+        
         .indicator-label {
             font-size: 11px;
             color: #666;
         }
-
+        
         .indicator-value {
             font-size: 12px;
             font-weight: 600;
             margin-top: 3px;
         }
-
+        
         .chat-header {
             background: white;
             padding: 15px 20px;
@@ -251,18 +263,18 @@
             align-items: center;
             justify-content: space-between;
         }
-
+        
         .chat-title {
             font-weight: 600;
             color: #333;
         }
-
+        
         .chat-actions {
             display: flex;
             gap: 15px;
             position: relative;
         }
-
+        
         .chat-action-btn {
             background: none;
             border: none;
@@ -271,11 +283,11 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-
+        
         .chat-action-btn:hover {
             transform: scale(1.1);
         }
-
+        
         .messages-container {
             flex: 1;
             padding: 20px;
@@ -285,7 +297,7 @@
             display: flex;
             flex-direction: column;
         }
-
+        
         .message {
             max-width: 70%;
             margin-bottom: 15px;
@@ -296,12 +308,12 @@
             font-size: 14px;
             line-height: 1.4;
         }
-
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
+        
         .received {
             background: white;
             align-self: flex-start;
@@ -309,7 +321,7 @@
             box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
             margin-right: auto;
         }
-
+        
         .sent {
             background: #dcf8c6;
             align-self: flex-end;
@@ -317,7 +329,7 @@
             box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
             margin-left: auto;
         }
-
+        
         .message-time {
             font-size: 11px;
             color: #667781;
@@ -327,18 +339,18 @@
             align-items: center;
             justify-content: flex-end;
         }
-
+        
         .message-indicators {
             display: flex;
             margin-right: 5px;
         }
-
+        
         .indicator {
             font-size: 10px;
             margin-right: 3px;
             opacity: 0.7;
         }
-
+        
         .typing-indicator {
             display: none; /* Hidden by default */
             align-items: center;
@@ -349,7 +361,7 @@
             width: fit-content;
             box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
         }
-
+        
         .typing-dot {
             width: 6px;
             height: 6px;
@@ -358,25 +370,25 @@
             margin-right: 4px;
             animation: typingAnimation 1.4s infinite ease-in-out;
         }
-
+        
         .typing-dot:nth-child(1) {
             animation-delay: 0s;
         }
-
+        
         .typing-dot:nth-child(2) {
             animation-delay: 0.2s;
         }
-
+        
         .typing-dot:nth-child(3) {
             animation-delay: 0.4s;
             margin-right: 0;
         }
-
+        
         @keyframes typingAnimation {
             0%, 60%, 100% { transform: translateY(0); }
             30% { transform: translateY(-3px); }
         }
-
+        
         .input-container {
             background: #f0f0f0;
             padding: 10px 15px;
@@ -384,7 +396,7 @@
             align-items: center;
             position: relative;
         }
-
+        
         #messageInput {
             flex: 1;
             border: none;
@@ -394,12 +406,12 @@
             font-size: 14px;
             background: white;
         }
-
+        
         .send-btn {
             background: #ff2d55;
             color: white;
             border: none;
-            border-radius: 50%;
+            borderRadius: 50%;
             width: 36px;
             height: 36px;
             display: flex;
@@ -409,11 +421,11 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-
+        
         .send-btn:hover {
             transform: scale(1.05);
         }
-
+        
         .alert {
             position: absolute;
             top: 10px;
@@ -429,22 +441,22 @@
             animation: slideDown 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
             z-index: 100;
         }
-
+        
         @keyframes slideDown {
             from { top: -40px; opacity: 0; }
             to { top: 10px; opacity: 1; }
         }
-
+        
         @keyframes fadeOut {
             from { opacity: 1; }
             to { opacity: 0; }
         }
-
+        
         .alert-emoji {
             margin-right: 8px;
             font-size: 16px;
         }
-
+        
         .privacy-notice {
             position: absolute;
             bottom: 10px;
@@ -457,13 +469,13 @@
             display: flex;
             align-items: center;
         }
-
+        
         .privacy-icon {
             margin-right: 5px;
             font-size: 12px;
             color: #4CAF50;
         }
-
+        
         /* Next Button Styles */
         .next-btn-container {
             position: fixed;
@@ -472,7 +484,7 @@
             z-index: 1000;
             transition: all 0.3s ease;
         }
-
+        
         .next-btn {
             background: #ff2d55;
             color: white;
@@ -487,24 +499,24 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
-
+        
         .next-btn:hover {
             background: #e61e4d;
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.15);
         }
-
+        
         .next-btn i {
             margin-left: 8px;
             font-size: 16px;
         }
-
+        
         /* Enhanced Menu Styles */
         .menu-container {
             position: relative;
             display: inline-block;
         }
-
+        
         .menu-btn {
             background: none;
             border: none;
@@ -521,22 +533,22 @@
             transition: all 0.3s ease;
             position: relative;
         }
-
+        
         .menu-btn:hover {
             background: #f0f0f0;
             transform: rotate(90deg);
         }
-
+        
         .menu-btn::after {
             content: '⋮';
             position: absolute;
             transition: all 0.3s ease;
         }
-
+        
         .menu-btn:hover::after {
             transform: scale(1.2);
         }
-
+        
         .menu-content {
             display: none;
             position: absolute;
@@ -553,18 +565,20 @@
             transform: scale(0.95);
             margin-top: 5px;
         }
-
+        
         @keyframes menuFadeIn {
             to {
                 opacity: 1;
                 transform: scale(1);
             }
         }
-
+        
         .menu-content.show {
             display: block;
+            opacity: 1;
+            transform: scale(1);
         }
-
+        
         .menu-item {
             color: #333;
             padding: 14px 18px;
@@ -576,14 +590,14 @@
             border-left: 3px solid transparent;
             font-weight: 500;
         }
-
+        
         .menu-item:hover {
             background-color: #fff5f7;
             border-left: 3px solid #ff2d55;
             padding-left: 22px;
             transform: translateX(2px);
         }
-
+        
         .menu-item i {
             margin-right: 14px;
             width: 20px;
@@ -591,74 +605,74 @@
             font-size: 16px;
             color: #ff2d55;
         }
-
+        
         .menu-item-text {
             flex: 1;
             font-size: 14px;
         }
-
+        
         .menu-item-arrow {
             color: #999;
             font-size: 14px;
             transition: transform 0.3s ease;
         }
-
+        
         .menu-item:hover .menu-item-arrow {
             transform: translateX(3px);
         }
-
+        
         /* Specific menu item styles */
         .would-you-rather-item {
             background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
         }
-
+        
         .would-you-rather-item i {
             color: #FF9800;
             animation: wobble 2s infinite;
         }
-
+        
         .lets-meet-up-item {
             background: linear-gradient(135deg, #fff5f7 0%, #ffeef1 100%);
         }
-
+        
         .lets-meet-up-item i {
             color: #E91E63;
             animation: pulse 2s infinite;
         }
-
+        
         .situational-game-item {
             background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
             border-top: 1px solid #f0f0f0;
         }
-
+        
         .situational-game-item i {
             color: #2196F3;
             animation: bounce 2s infinite;
         }
-
+        
         .unlock-profile-item {
             background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
             border-top: 1px solid #f0f0f0;
         }
-
+        
         .unlock-profile-item i {
             color: #4CAF50;
             animation: shine 2s infinite;
         }
-
+        
         /* Animations */
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
-
+        
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-3px); }
             60% { transform: translateY(-2px); }
         }
-
+        
         @keyframes wobble {
             0% { transform: rotate(0deg); }
             25% { transform: rotate(-5deg); }
@@ -666,51 +680,51 @@
             75% { transform: rotate(-3deg); }
             100% { transform: rotate(0deg); }
         }
-
+        
         @keyframes shine {
             0% { opacity: 1; }
             50% { opacity: 0.7; }
             100% { opacity: 1; }
         }
-
+        
         /* Mobile menu adjustments */
         @media (max-width: 480px) {
             .menu-content {
                 min-width: 200px;
                 right: -10px;
             }
-
+            
             .menu-item {
                 padding: 12px 16px;
                 font-size: 13px;
             }
-
+            
             .menu-item i {
                 margin-right: 12px;
                 width: 18px;
                 font-size: 15px;
             }
-
+            
             .menu-item-text {
                 font-size: 13px;
             }
         }
-
+        
         /* Loading states */
         .menu-item.loading {
             opacity: 0.7;
             pointer-events: none;
         }
-
+        
         .menu-item.loading i {
             animation: spin 1s linear infinite !important;
         }
-
+        
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
+        
         .hidden {
             display: none !important;
         }
@@ -732,7 +746,7 @@
                             <span class="menu-item-text">Would You Rather</span>
                             <span class="menu-item-arrow">→</span>
                         </div>
-                        <div class="menu-item lets-meet-up-item" onclick="redirectToLeetsMeetUp()">
+                        <div class="menu-item lets-meet-up-item" onclick="redirectToLetsMeetUp()">
                             <i class="fas fa-heart"></i>
                             <span class="menu-item-text">Let's Meet Up</span>
                             <span class="menu-item-arrow">→</span>
@@ -1097,17 +1111,16 @@
             textElement.textContent = text;
         }
         
-        // Menu redirect functions
+        // Menu redirect functions - UPDATED TO MATCH REQUIREMENTS
         function redirectToWouldYouRather() {
             const item = document.querySelector('.would-you-rather-item');
             showLoadingState(item, 'Loading game...');
             setTimeout(() => {
-                // This is a placeholder for a real redirect
-                window.location.href = "game-would-you-rather.html";
+                window.location.href = "index5.html";
             }, 1500);
         }
         
-        function redirectToLeetsMeetUp() {
+        function redirectToLetsMeetUp() {
             const item = document.querySelector('.lets-meet-up-item');
             showLoadingState(item, 'Setting up meet...');
             setTimeout(() => {
@@ -1119,7 +1132,7 @@
             const item = document.querySelector('.situational-game-item');
             showLoadingState(item, 'Loading scenarios...');
             setTimeout(() => {
-                window.location.href = "game-situational.html";
+                window.location.href = "index4.html";
             }, 1500);
         }
         
@@ -1127,7 +1140,7 @@
             const item = document.querySelector('.unlock-profile-item');
             showLoadingState(item, 'Unlocking profile...');
             setTimeout(() => {
-                window.location.href = "index5.html";
+                window.location.href = "index8.html";
             }, 1500);
         }
         
@@ -1151,5 +1164,3 @@
     </script>
 </body>
 </html>
-
-
