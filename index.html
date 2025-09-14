@@ -35,7 +35,7 @@
       z-index: 2;
     }
 
-    /* Buttons under "Sign up to continue" */
+    /* Buttons + tagline container */
     .buttons {
       position: absolute;
       top: 70%; /* shifted more down */
@@ -46,6 +46,19 @@
       gap: 15px;
     }
 
+    /* Security tagline */
+    .security-text {
+      color: #fff; /* White color */
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 15px;
+      opacity: 0;
+      animation: fadeInUp 1.5s ease forwards;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    }
+
+    /* Button style */
     .buttons button {
       padding: 12px 30px;
       border: none;
@@ -62,18 +75,6 @@
     .buttons button:hover {
       transform: scale(1.05);
       background-color: #ffb3d9;
-    }
-
-    /* Security tagline */
-    .security-text {
-      color: #e91e63; /* Deep rose pink */
-      font-size: 18px;
-      font-weight: bold;
-      text-align: center;
-      margin-top: 25px;
-      opacity: 0;
-      animation: fadeInUp 1.5s ease forwards;
-      text-shadow: 0 0 10px rgba(233, 30, 99, 0.5);
     }
 
     /* Animation */
@@ -99,8 +100,8 @@
   <!-- Login Screen -->
   <div id="loginScreen">
     <div class="buttons">
-      <button onclick="location.href='index1.html'">Create Account</button>
       <div class="security-text">At Kismat, security isn’t a feature, it’s a promise.</div>
+      <button onclick="location.href='index1.html'">Create Account</button>
     </div>
   </div>
 
